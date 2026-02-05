@@ -1,0 +1,48 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f4; margin: 0; color: #333; }
+.container { max-width: 800px; margin: 0 auto; padding: 20px; }
+header { background: #333; color: #fff; padding: 20px 0; cursor: pointer; }
+header h1 { margin: 0; text-align: center; }
+header p { text-align: center; font-size: 0.9em; color: #ccc; }
+
+/* 列表样式 */
+.card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+.card:hover { transform: translateY(-3px); }
+.date { color: #888; font-size: 0.9em; }
+
+/* 文章详情样式 */
+.hidden { display: none; }
+.back-btn { background: #ddd; border: none; padding: 8px 15px; cursor: pointer; margin-bottom: 20px; border-radius: 4px; }
+.back-btn:hover { background: #ccc; }
+#viewer-content img { max-width: 100%; height: auto; display: block; margin: 20px 0; border-radius: 5px; }
+
+/* 附件下载链接样式 */
+.download-link {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+.download-link:hover { background: #0056b3; }
+/* 1. 让 main 区域自动伸展，占据所有剩余空间 */
+/* 这会把 footer 推到页面最底部 */
+main {
+    flex: 1;
+}
+
+/* 2. 页脚样式 */
+footer {
+    background: #fff;       /* 背景颜色，可以改回 #333 */
+    color: #888;            /* 文字颜色 */
+    text-align: center;     /* 文字居中核心代码 */
+    padding: 30px 0;        /* 上下内边距 */
+    border-top: 1px solid #eee; /* 顶部加一条浅浅的分隔线 */
+    margin-top: 50px;       /* 与上方内容的间距 */
+}
+
+footer p {
+    margin: 5px 0;          /* 段落间距 */
+    font-size: 0.9em;
+}
