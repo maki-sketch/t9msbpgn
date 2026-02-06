@@ -3,14 +3,14 @@
     "id": "1post",
     "title": "网站简介",
     "date": "2026-2-6",
-    "file": "1post.html",
+    "file": "posts/1post.html",
     "summary": ""
   },  
   {
     "id": "post2",
     "title": "alphatest",
     "date": "2026-2-5",
-    "file": "alphatest.html",
+    "file": "posts/alphatest.html",
     "summary": "这是测试内容"
   }
 ]
