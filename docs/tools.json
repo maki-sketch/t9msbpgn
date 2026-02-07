@@ -12,5 +12,13 @@
     "date": "2026-2-7",
     "file": "tools2.html",
     "summary": "https://libretranslate.com/"
-  } 
+    },
+    {
+    "id": "tools3",
+    "title": "哈希值计算(SHA-256/SHA-512)",
+    "date": "2026-2-7",
+    "file": "tools3.html",
+    "summary": "HTML小程序"
+    }
 ]
+
