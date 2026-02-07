@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES-GCM 离线加密解密工具</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        h1, h2 { text-align: center; color: #0f172a; }
+        .group { margin-bottom: 1.5rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        input[type="text"], input[type="number"], input[type="password"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+        textarea { height: 100px; resize: vertical; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-gen { background: #64748b; color: white; }
+        button:hover { opacity: 0.9; }
+        button:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .status { margin-top: 10px; font-size: 0.9rem; color: #64748b; }
+        .footer { text-align: center; font-size: 0.8rem; color: #94a3b8; }
+        hr { border: 0; border-top: 1px solid #e2e8f0; margin: 2rem 0; }
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #e2e8f0;
+            color: #475569;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .back-btn:hover {
+            background: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div style="margin: 20px 0;">
+        <a href="index.html" class="back-btn">← 返回首页</a>
+        <a href="tools.html" class="back-btn" style="margin-left: 10px;">← 返回工具列表</a>
+    </div>
+
+    <h1>🔐 AES-256-GCM 离线加密工具</h1>
+    
+    <!-- 密码生成器 -->
+    <div class="card">
+        <h2>1. 生成随机密码</h2>
+        <div class="group">
+            <label>密码长度 (位数):</label>
+            <input type="number" id="passLength" value="16" min="4" max="128">
+        </div>
+        <div class="btn-group">
+            <button class="btn-gen" onclick="generatePassword()">生成随机密码</button>
+        </div>
+        <div class="group" style="margin-top: 10px;">
+            <input type="text" id="generatedPass" readonly placeholder="生成的密码会显示在这里">
+            <button class="btn-gen" style="margin-top:5px; padding:5px 10px; font-size:0.8rem;" onclick="copyPassword()">复制到下方加密框</button>
+        </div>
+    </div>
+
+    <!-- 加密解密主区域 -->
+    <div class="card">
+        <h2>2. 加密 / 解密</h2>
+        
+        <div class="group">
+            <label>主密钥 (加密口令):</label>
+            <input type="password" id="mainKey" placeholder="输入用于加密/解密的密码">
+        </div>
+
+        <hr>
+
+        <!-- 文字模式 -->
+        <div class="group">
+            <label>待处理文字:</label>
+            <textarea id="inputText" placeholder="输入明文(准备加密)或 Base64 密文(准备解密)"></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-primary" onclick="processText(true)">加密文字</button>
+            <button class="btn-success" onclick="processText(false)">解密文字</button>
+        </div>
+
+        <div class="group" style="margin-top: 1.5rem;">
+            <label>结果:</label>
+            <textarea id="outputText" readonly placeholder="处理结果将在此显示"></textarea>
+        </div>
+
+        <hr>
+
+        <!-- 文件模式 -->
+        <div class="group">
+            <label>处理文件:</label>
+            <input type="file" id="inputFile">
+            <p style="font-size: 0.8rem; color: #64748b;">注:大文件处理取决于您的浏览器内存。</p>
+        </div>
+        <div class="btn-group">
+            <button class="btn-primary" onclick="processFile(true)">加密并下载文件</button>
+            <button class="btn-success" onclick="processFile(false)">解密并下载文件</button>
+        </div>
+        <div id="fileStatus" class="status"></div>
+    </div>
+
+    <div class="footer">
+        使用浏览器原生 Web Crypto API (AES-GCM 256bit) | 完全离线运行
+    </div>
+</div>
+
+<script>
+    /**
+     * 密码生成逻辑
+     */
+    function generatePassword() {
+        const length = document.getElementById('passLength').value;
+        const charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+        let retVal = "";
+        const values = new Uint32Array(length);
+        window.crypto.getRandomValues(values);
+        for (let i = 0; i < length; i++) {
+            retVal += charset.charAt(values[i] % charset.length);
+        }
+        document.getElementById('generatedPass').value = retVal;
+    }
+
+    function copyPassword() {
+        const pass = document.getElementById('generatedPass').value;
+        if (pass) document.getElementById('mainKey').value = pass;
+    }
+
+    /**
+     * 核心加密/解密逻辑
+     * 使用 AES-GCM 算法,PBKDF2 衍生密钥
+     */
+    const ITERATIONS = 300000;
+    const SALT_BYTE_LEN = 16;
+    const IV_BYTE_LEN = 12;
+
+    async function deriveKey(password, salt) {
+        const enc = new TextEncoder();
+        const keyMaterial = await window.crypto.subtle.importKey(
+            "raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]
+        );
+        return window.crypto.subtle.deriveKey(
+            {
+                name: "PBKDF2",
+                salt: salt,
+                iterations: ITERATIONS,
+                hash: "SHA-256"
+            },
+            keyMaterial,
+            { name: "AES-GCM", length: 256 },
+            false,
+            ["encrypt", "decrypt"]
+        );
+    }
+
+    // 处理文字
+    async function processText(isEncrypt) {
+        const password = document.getElementById('mainKey').value;
+        const input = document.getElementById('inputText').value;
+        
+        if (!password || !input) {
+            alert("请输入密码和内容");
+            return;
+        }
+
+        try {
+            if (isEncrypt) {
+                // 加密
+                const salt = window.crypto.getRandomValues(new Uint8Array(SALT_BYTE_LEN));
+                const iv = window.crypto.getRandomValues(new Uint8Array(IV_BYTE_LEN));
+                const key = await deriveKey(password, salt);
+                
+                const encodedText = new TextEncoder().encode(input);
+                const ciphertext = await window.crypto.subtle.encrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    encodedText
+                );
+
+                // 合并 Salt + IV + Ciphertext
+                const combined = new Uint8Array(salt.length + iv.length + ciphertext.byteLength);
+                combined.set(salt, 0);
+                combined.set(iv, salt.length);
+                combined.set(new Uint8Array(ciphertext), salt.length + iv.length);
+                
+                // 转为 Base64 输出
+                document.getElementById('outputText').value = btoa(String.fromCharCode(...combined));
+            } else {
+                // 解密
+                const combined = Uint8Array.from(atob(input), c => c.charCodeAt(0));
+                const salt = combined.slice(0, SALT_BYTE_LEN);
+                const iv = combined.slice(SALT_BYTE_LEN, SALT_BYTE_LEN + IV_BYTE_LEN);
+                const data = combined.slice(SALT_BYTE_LEN + IV_BYTE_LEN);
+                
+                const key = await deriveKey(password, salt);
+                const decrypted = await window.crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    data
+                );
+                
+                document.getElementById('outputText').value = new TextDecoder().decode(decrypted);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("错误:可能是密码错误或数据损坏，也可能是您没有使用HTTPS连接");
+        }
+    }
+
+    // 处理文件
+    async function processFile(isEncrypt) {
+        const password = document.getElementById('mainKey').value;
+        const fileInput = document.getElementById('inputFile');
+        const status = document.getElementById('fileStatus');
+
+        if (!password || !fileInput.files.length) {
+            alert("请输入密码并选择文件");
+            return;
+        }
+
+        const file = fileInput.files[0];
+        status.innerText = "处理中,请稍候...";
+
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+
+            if (isEncrypt) {
+                const salt = window.crypto.getRandomValues(new Uint8Array(SALT_BYTE_LEN));
+                const iv = window.crypto.getRandomValues(new Uint8Array(IV_BYTE_LEN));
+                const key = await deriveKey(password, salt);
+                
+                const ciphertext = await window.crypto.subtle.encrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    arrayBuffer
+                );
+
+                const combined = new Uint8Array(salt.length + iv.length + ciphertext.byteLength);
+                combined.set(salt, 0);
+                combined.set(iv, salt.length);
+                combined.set(new Uint8Array(ciphertext), salt.length + iv.length);
+
+                downloadBlob(combined, file.name + ".enc");
+                status.innerText = "加密完成!";
+            } else {
+                const combined = new Uint8Array(arrayBuffer);
+                const salt = combined.slice(0, SALT_BYTE_LEN);
+                const iv = combined.slice(SALT_BYTE_LEN, SALT_BYTE_LEN + IV_BYTE_LEN);
+                const data = combined.slice(SALT_BYTE_LEN + IV_BYTE_LEN);
+                
+                const key = await deriveKey(password, salt);
+                const decrypted = await window.crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    data
+                );
+
+                downloadBlob(decrypted, file.name.replace(".enc", ""));
+                status.innerText = "解密完成!";
+            }
+        } catch (e) {
+            console.error(e);
+            status.innerText = "错误:解密失败,请检查密码。";
+        }
+    }
+
+    function downloadBlob(data, fileName) {
+        const blob = new Blob([data], { type: "application/octet-stream" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>

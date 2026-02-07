@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学校简介 - 天津市第九中学</title>
+    <!-- 引用与博客相同的样式表 -->
+    <link rel="stylesheet" href="index-style.css">
+    <style>
+        /* 针对独立页面的微调样式 */
+        .intro-banner {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #ddd; /* 图片加载前的占位色 */
+        }
+        .info-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <!-- 点击标题返回博客主页 -->
+            <h1 onclick="window.location.href='index.html'">Tianjin No.9 High School</h1>
+            <p>点击标题返回博客首页</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 页面导航栏 (面包屑) -->
+        <div style="margin: 20px 0;">
+            <a href="index.html" class="back-btn" style="text-decoration: none;">← 返回首页</a>
+        </div>
+
+        <div class="info-section">
+            <h1>天津市第九中学简介</h1>
+            <hr>
+            
+            <!-- 请在 uploads 文件夹放入一张学校全景图，命名为 school-banner.jpg -->
+            <img src="uploads/school-banner.jpg" alt="九中校园" class="intro-banner">
+
+            <h3>百年九中，薪火相传</h3>
+            <p>天津市第九中学，简称天津九中，前身是1905年由中国近代立宪派人士、教育家温世霖创办的天津私立普育女学堂，历经数次的校名变更与校园搬迁，更名为天津市第九中学至今[1]。2006年，天津市第一一〇中学并入天津市第九中学[2]。目前，天津九中是隶属于天津市南开区的天津市市级重点中学。</p>
+
+            <h3>办学理念</h3>
+            <p>学校秉承“见贤思齐”的校训，坚持“以人为本，特色发展”的办学理念，致力于培养具有家国情怀、国际视野、创新精神和实践能力的优秀人才。</p>
+
+            <h3>校园环境与设施</h3>
+            <p>学校坐落于天津市南开区，环境幽雅，设施先进。拥有现代化的教学楼、实验楼、图书馆以及多功能的体育场馆，为学生提供了优越的学习和成长环境。</p>
+            
+            <!-- 如果有宣传册，可以用这个下载链接 -->
+            <p style="margin-top: 30px;">
+                <a href="uploads/school-profile.pdf" class="download-link" download>📥 下载学校详细宣传册 (PDF)</a>
+            </p>
+        </div>
+    </main>
+  <footer style="background-color: #f1f1f1; padding: 20px; text-align: center; margin-top: 50px; border-top: 1px solid #ddd;">
+    <p>
+        <a href="index.html" style="margin: 0 15px; color: #333; text-decoration: none;">首页</a> |
+        <a href="/kc-intro.html" style="margin: 0 15px; color: #333; text-decoration: none;">科创部简介</a> |
+        <a href="https://github.com/maki-sketch/t9msbpgn" style="margin: 0 15px; color: #333; text-decoration: none;">GitHub仓库</a> |
+        <a href="tools.html" style="margin: 0 15px; color: #333; text-decoration: none;">工具</a>
+    </p>
+    <p style="color: #666; font-size: 14px;">
+    &copy; 2026 T9MSBPGN. Released under the 
+    <a href="https://github.com/maki-sketch/t9msbpgn/blob/main/LICENSE">MIT License</a>. | Powered by Cloudflare Pages™</p>
+</footer>
+</body>
+</html>
