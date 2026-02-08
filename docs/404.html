@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404</title>
+    <!-- 引用与博客相同的样式表 -->
+    <link rel="stylesheet" href="index-style.css">
+    <style>
+        /* 针对独立页面的微调样式 */
+        .intro-banner {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #ddd; /* 图片加载前的占位色 */
+        }
+        .info-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <!-- 点击标题返回博客主页 -->
+            <h1 onclick="window.location.href='index.html'">404</h1>
+            <p>That’s an error.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 页面导航栏 (面包屑) -->
+        <div style="margin: 20px 0;">
+            <a href="index.html" class="back-btn" style="text-decoration: none;">← 返回首页</a>
+        </div>
+
+        <div class="info-section">
+            <h1>404</h1>
+            <h3>哎呀，这里似乎没有东西呦</h3>           
+            <img src="document/robot.png" alt="404">
+        <p>The requested URL was not found on this server. That’s all we know. </p>
+        </div>
+    </main>
+  <footer style="background-color: #f1f1f1; padding: 20px; text-align: center; margin-top: 50px; border-top: 1px solid #ddd;">
+    <p>
+        <a href="index.html" style="margin: 0 15px; color: #333; text-decoration: none;">首页</a> |
+        <a href="https://github.com/maki-sketch/t9msbpgn" style="margin: 0 15px; color: #333; text-decoration: none;">GitHub仓库</a> |
+        <a href="tools.html" style="margin: 0 15px; color: #333; text-decoration: none;">工具</a>
+    </p>
+    <p style="color: #666; font-size: 14px;">
+    &copy; 2026 T9MSBPGN. Released under the 
+    <a href="https://github.com/maki-sketch/t9msbpgn/blob/main/LICENSE">MIT License</a>. | Powered by Cloudflare Pages™</p>
+</footer>
+</body>
+</html>
